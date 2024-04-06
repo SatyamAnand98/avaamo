@@ -1,0 +1,1 @@
+# install sudo apt-get install poppler-utils for pdftotext in textract

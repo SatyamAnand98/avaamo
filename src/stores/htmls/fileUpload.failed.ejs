@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>File Upload Failed</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body style="background-color: #f8f8f8;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3" style="margin-top: 50px;">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File Upload Failed</h3>
+                    </div>
+                    <div class="panel-body text-center">
+                        <h4>Sorry, your file was not uploaded.</h4>
+                        <p>Please try again.</p>
+
+                        <!-- Display any form errors here -->
+                        <c:if test="${!empty errors}">
+                            <div class="alert alert-danger">
+                                <ul>
+                                    <c:forEach items="${errors}" var="error">
+                                        <li>${error}</li>
+                                    </c:forEach>
+                                </ul>
+                            </div>
+                        </c:if>
+
+                        <!-- Display a message if the file is too large -->
+                        <c:if test="${not empty maxFileSize}">
+                            <p>Maximum file size: ${maxFileSize}</p>
+                        </c:if>
+
+                        <!-- Display a link to try again -->
+                        <a href="/upload_form">Try Again</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- BEGIN: Footer -->
+    <footer id="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p>To know more, click on:</p>
+                    <a href="https://www.satyamanand.in" target="_blank">Satyam Anand</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- END: Footer -->
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>File Upload Success</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body style="background-color: #f8f8f8;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3" style="margin-top: 50px;">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File Upload Success</h3>
+                    </div>
+                    <div class="panel-body text-center">
+                        <h4>Your file has been uploaded successfully. Below are the files you uploaded along with its
+                            size.</h4>
+                        <p>
+                        <ul>
+                            <% textInFiles.forEach(function(file) { %>
+                                <li>
+                                    <%= file.fileName %> - <%= file.size %> bytes
+                                            <ul>
+                                                <% for (const [word, count] of Object.entries(file.wordCount)) { %>
+                                                    <li>
+                                                        <%= word %> - <%= count %> occurrences
+                                                    </li>
+                                                    <% } %>
+                                            </ul>
+                                </li>
+                                <% }); %>
+                        </ul>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- BEGIN: Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p>To know more, click on:</p>
+                    <a href="https://www.satyamanand.in" target="_blank">Satyam Anand</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- END: Footer -->
+</body>
+
+</html>
