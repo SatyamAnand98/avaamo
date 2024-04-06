@@ -30,6 +30,6 @@ Documentation: [https://tech.yandex.com/dictionary/doc/dg/reference/lookup-docpa
 8. Containerize your app for easy deployment.
 9. Document the steps to run your solution locally in the Dev environment.
 
-## Assignment Duration
+# Postman Doc
 
-3 days
+https://documenter.getpostman.com/view/20345587/2sA35Mwy68
