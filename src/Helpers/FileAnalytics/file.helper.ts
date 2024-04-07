@@ -8,6 +8,8 @@ import ejs from "ejs";
 import { saveBufferToS3 } from "../logics/saveBufferToFile";
 import { callAxios, callFetch } from "../../APIs";
 import { getSynonyms } from "../logics/getPrepositions";
+import { wordCount } from "../logics/word.count";
+import { EPurpose } from "../../stores/enums/purpose.enum";
 
 const successHtmlPath = path.resolve(__dirname, "../../stores/htmls");
 const successHtml = fs.readFileSync(
@@ -48,6 +50,7 @@ class FileActivityService extends HelperAbstract {
                     buffer: file.buffer,
                     size: file.size,
                     email,
+                    purpose: EPurpose.UNIQUE_WORDS,
                 });
             });
 
@@ -87,17 +90,35 @@ class FileActivityService extends HelperAbstract {
             );
             throw err;
         } finally {
-            await this.deleteFiles(files);
+            this.deleteFiles(files);
         }
     }
 
     async findSynonyms(
         words: string[],
-        files: Express.Multer.File[],
+        file: Express.Multer.File,
         email: string
     ): Promise<any> {
         try {
             const synonymsResponses: any[] = [];
+            const fileText = await ReadFiles.readTextFromAll([file]);
+
+            new UploadedFileModel({
+                fileName:
+                    file.originalname.split(".")[0] +
+                    "-" +
+                    Date.now() +
+                    "." +
+                    file.originalname.split(".")[1],
+                originalName: file.originalname,
+                encoding: file.encoding,
+                mimeType: file.mimetype,
+                buffer: file.buffer,
+                size: file.size,
+                email,
+                purpose: EPurpose.SYNONYMS,
+                words,
+            }).save();
 
             for (const word of words) {
                 if (!process.env.YANDEX_API || !process.env.YANDEX_KEY) {
@@ -122,7 +143,13 @@ class FileActivityService extends HelperAbstract {
                 const jsonData: any = JSON.parse(data);
 
                 if (Array.isArray(jsonData.def)) {
-                    synonymsResponses.push(getSynonyms(jsonData.def));
+                    synonymsResponses.push({
+                        [file.originalname]: {
+                            word,
+                            wordCount: wordCount(fileText[0].text, word),
+                            synonyms: getSynonyms(jsonData.def),
+                        },
+                    });
                 }
             }
 
@@ -133,39 +160,49 @@ class FileActivityService extends HelperAbstract {
             );
             throw err;
         } finally {
-            await this.deleteFiles(files);
+            this.deleteFiles([file]);
         }
     }
 
     async wordMasking(
         words: string[],
-        files: Express.Multer.File[],
+        file: Express.Multer.File,
         email: string
     ): Promise<any> {
         try {
-            const maskedFiles: Express.Multer.File[] = [];
+            let maskedContent = file.buffer.toString();
+            words.forEach((word) => {
+                maskedContent = maskedContent.replace(
+                    new RegExp(`\\b${word}\\b`, "gi"),
+                    "*".repeat(word.length)
+                );
+            });
 
-            for (const file of files) {
-                let maskedContent = file.buffer.toString();
-                // Iterate through each word in the array and mask it
-                words.forEach((word) => {
-                    // Replace all occurrences of the current word with '*'
-                    maskedContent = maskedContent.replace(
-                        new RegExp(`\\b${word}\\b`, "gi"),
-                        "*".repeat(word.length)
-                    );
-                });
+            const maskedFile: Express.Multer.File = {
+                ...file,
+                buffer: Buffer.from(maskedContent),
+            };
 
-                // Create a new file object with the masked content
-                const maskedFile: Express.Multer.File = {
-                    ...file,
-                    buffer: Buffer.from(maskedContent),
-                };
+            const filesPath: string[] = saveBufferToS3([maskedFile]);
 
-                maskedFiles.push(maskedFile);
-            }
+            new UploadedFileModel({
+                fileName:
+                    file.originalname.split(".")[0] +
+                    "-" +
+                    Date.now() +
+                    "." +
+                    file.originalname.split(".")[1],
+                originalName: file.originalname,
+                encoding: file.encoding,
+                mimeType: file.mimetype,
+                buffer: file.buffer,
+                size: file.size,
+                email,
+                purpose: EPurpose.WORD_MASKING,
+                words,
+                fileUrl: filesPath[0],
+            }).save();
 
-            const filesPath: string[] = saveBufferToS3(maskedFiles);
             return filesPath;
         } catch (err: any) {
             console.log(
@@ -173,19 +210,21 @@ class FileActivityService extends HelperAbstract {
             );
             throw err;
         } finally {
-            await this.deleteFiles(files);
+            this.deleteFiles([file]);
         }
     }
 
     private async deleteFiles(files: Express.Multer.File[]): Promise<any> {
         for (const file of files) {
-            const filePath = path.join(__dirname, `../../${file.path}`);
-            if (fs.existsSync(filePath)) {
-                fs.unlinkSync(filePath);
-                // await fs.promises.rm(path.join(__dirname, "../../uploads"), {
-                //     force: true,
-                //     recursive: true,
-                // });
+            if (file?.path) {
+                const filePath = path.join(__dirname, `../../${file.path}`);
+                if (fs.existsSync(filePath)) {
+                    fs.unlinkSync(filePath);
+                    // await fs.promises.rm(path.join(__dirname, "../../uploads"), {
+                    //     force: true,
+                    //     recursive: true,
+                    // });
+                }
             }
         }
     }

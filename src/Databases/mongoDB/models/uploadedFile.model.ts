@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import { EPurpose } from "../../../stores/enums/purpose.enum";
 
 /**
  * Define the interface for the UploadedFile document
@@ -11,6 +12,9 @@ interface UploadedFileDocument {
     buffer: Buffer;
     size: number;
     email: string;
+    purpose: EPurpose;
+    words: string[];
+    fileUrl: string;
 }
 
 /**
@@ -25,6 +29,13 @@ const uploadedFileSchema = new Schema<UploadedFileDocument>(
         buffer: { type: Buffer, required: true },
         size: { type: Number, required: true },
         email: { type: String, required: true, index: true },
+        purpose: {
+            type: String,
+            required: false,
+            enum: Object.values(EPurpose),
+        },
+        words: { type: [String], required: false },
+        fileUrl: { type: String, required: false },
     },
     {
         timestamps: true,

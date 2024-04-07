@@ -6,3 +6,4 @@ eng.traineddata
 AWS_S3/
 build
 pushDocker.sh
+pushDockeramd64.sh

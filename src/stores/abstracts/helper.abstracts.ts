@@ -15,7 +15,7 @@ interface IHelper {
      */
     findSynonyms(
         words: string[],
-        files: Express.Multer.File[],
+        files: Express.Multer.File,
         email: string
     ): Promise<any>;
 
@@ -25,7 +25,7 @@ interface IHelper {
      */
     wordMasking(
         words: string[],
-        files: Express.Multer.File[],
+        files: Express.Multer.File,
         email: string
     ): Promise<any>;
 }
@@ -43,12 +43,12 @@ abstract class HelperAbstract implements IHelper {
     ): Promise<any>;
     abstract findSynonyms(
         words: string[],
-        files: Express.Multer.File[],
+        files: Express.Multer.File,
         email: string
     ): Promise<any>;
     abstract wordMasking(
         words: string[],
-        files: Express.Multer.File[],
+        files: Express.Multer.File,
         email: string
     ): Promise<any>;
 }

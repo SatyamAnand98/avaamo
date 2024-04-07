@@ -17,5 +17,5 @@ export const uniqueWordSchemaValidator = joi.object({
 export const wordSchemaValidator = joi.object({
     email: joi.string().email().required(),
     words: joi.array().items(joi.string()).min(1).required(),
-    files: joi.array().items(fileSchema).min(1).required(),
+    file: fileSchema.required(),
 });

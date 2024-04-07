@@ -14,12 +14,12 @@ fileActivityRoutes.post(
 
 fileActivityRoutes.post(
     "/get/synonyms",
-    upload.array("files"),
+    upload.single("file"),
     fileActivityController.findSynonyms
 );
 fileActivityRoutes.post(
     "/mask-words",
-    upload.array("files"),
+    upload.single("file"),
     fileActivityController.wordMasking
 );
 

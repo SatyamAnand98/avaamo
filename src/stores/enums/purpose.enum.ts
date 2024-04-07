@@ -1,0 +1,5 @@
+export enum EPurpose {
+    UNIQUE_WORDS = "UNIQUE_WORDS",
+    SYNONYMS = "SYNONYMS",
+    WORD_MASKING = "WORD_MASKING",
+}

@@ -28,4 +28,22 @@ function countWordFrequency(str: string): { [key: string]: number } {
     }
 }
 
-export default countWordFrequency;
+function wordCount(mainString: string, subString: string): number {
+    try {
+        const escapedSubString = subString.replace(
+            /[.*+?^${}()|[\]\\]/g,
+            "\\$&"
+        );
+
+        const regex = new RegExp(escapedSubString, "gi");
+
+        const matches = mainString.match(regex);
+
+        return matches ? matches.length : 0;
+    } catch (err: any) {
+        console.log(`Error in wordCount function: ${err.message}`);
+        throw err;
+    }
+}
+
+export { countWordFrequency, wordCount };

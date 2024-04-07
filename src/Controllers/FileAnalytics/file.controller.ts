@@ -63,18 +63,17 @@ class FileActivityController extends ControllerAbstract {
                 .split(",")
                 .map((word: string) => word.trim());
             const email: string = req.body.email;
-            const files: Express.Multer.File[] =
-                req.files as Express.Multer.File[];
+            const file: Express.Multer.File = req.file as Express.Multer.File;
 
             const data = await wordSchemaValidator.validateAsync({
                 email,
                 words,
-                files,
+                file,
             });
 
             const result = await fileActivityService.findSynonyms(
                 data.words,
-                data.files,
+                data.file,
                 data.email
             );
 
@@ -101,13 +100,18 @@ class FileActivityController extends ControllerAbstract {
                 .split(",")
                 .map((word: string) => word.trim());
             const email: string = req.body.email;
-            const files: Express.Multer.File[] =
-                req.files as Express.Multer.File[];
+            const file: Express.Multer.File = req.file as Express.Multer.File;
+
+            const allowedFileTypes = ["text/plain"];
+            const fileMimeType = file.mimetype;
+            if (!allowedFileTypes.includes(fileMimeType)) {
+                throw new Error("Only text files are allowed");
+            }
 
             const data = await wordSchemaValidator.validateAsync({
                 email,
                 words,
-                files,
+                file,
             });
 
             /**
@@ -115,7 +119,7 @@ class FileActivityController extends ControllerAbstract {
              */
             const result: string[] = await fileActivityService.wordMasking(
                 data.words,
-                data.files,
+                data.file,
                 data.email
             );
 

@@ -13,7 +13,7 @@ export function saveBufferToS3(responseArray: Express.Multer.File[]) {
 
         const filePath = path.join(
             directory,
-            `${originalName.split(".")[0]}-${Date.now()}-masked-${
+            `${originalName.split(".")[0]}-${Date.now()}-masked.${
                 originalName.split(".")[1]
             }`
         );

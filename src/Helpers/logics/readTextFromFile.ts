@@ -1,6 +1,6 @@
 import textract from "textract";
 import { formatFileSize } from "./size.convert";
-import countWordFrequency from "./word.count";
+import { countWordFrequency } from "./word.count";
 
 /**
  * Reads text from:
