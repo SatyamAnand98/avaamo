@@ -7,3 +7,4 @@ AWS_S3/
 build
 pushDocker.sh
 pushDockeramd64.sh
+push.sh
