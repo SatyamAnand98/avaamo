@@ -70,23 +70,23 @@ export class DatabaseConnection implements IDB_Connection {
      */
     private async createConnection(): Promise<void> {
         const DB_URL: string =
-            process.env.ENV === "LOCAL"
+            process.env.ENVIRONMENT === "LOCAL"
                 ? process.env.DB_LOCAL || ""
-                : process.env.ENV == "DEV"
+                : process.env.ENVIRONMENT == "DEV"
                 ? process.env.DB_DEV || ""
                 : process.env.DB_PROD || ""; // Database URL based on the environment
 
         const DB_USER: string =
-            process.env.ENV === "LOCAL"
+            process.env.ENVIRONMENT === "LOCAL"
                 ? process.env.DB_LOCAL_USER || ""
-                : process.env.ENV == "DEV"
+                : process.env.ENVIRONMENT == "DEV"
                 ? process.env.DB_DEV_USER || ""
                 : process.env.DB_PROD_USER || ""; // Database username based on the environment
 
         const DB_PASS: string =
-            process.env.ENV === "LOCAL"
+            process.env.ENVIRONMENT === "LOCAL"
                 ? process.env.DB_LOCAL_PASS || ""
-                : process.env.ENV == "DEV"
+                : process.env.ENVIRONMENT == "DEV"
                 ? process.env.DB_DEV_PASS || ""
                 : process.env.DB_PROD_PASS || ""; // Database password based on the environment
 

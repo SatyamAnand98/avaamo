@@ -5,7 +5,9 @@
   "main": "src/server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node-dev --respawn --pretty --transpile-only src/server.ts"
+    "dev": "ts-node-dev --respawn --pretty --transpile-only src/server.ts",
+    "build": "rm -rf ./build/ && tsc -p tsconfig.json && cp -r ./src/stores/htmls ./build/stores/htmls",
+    "start": "node build/server.js"
   },
   "author": "Satyam Anand",
   "license": "ISC",

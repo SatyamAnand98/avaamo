@@ -4,3 +4,5 @@ package-lock.json
 uploads
 eng.traineddata
 AWS_S3/
+build
+pushDocker.sh

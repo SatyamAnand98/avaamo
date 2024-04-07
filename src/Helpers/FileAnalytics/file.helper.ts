@@ -7,6 +7,7 @@ import { sendEmail } from "../logics/sendEmail";
 import ejs from "ejs";
 import { saveBufferToS3 } from "../logics/saveBufferToFile";
 import { callAxios, callFetch } from "../../APIs";
+import { getSynonyms } from "../logics/getPrepositions";
 
 const successHtmlPath = path.resolve(__dirname, "../../stores/htmls");
 const successHtml = fs.readFileSync(
@@ -96,23 +97,36 @@ class FileActivityService extends HelperAbstract {
         email: string
     ): Promise<any> {
         try {
-            if (!process.env.YANDEX_API || !process.env.YANDEX_KEY) {
-                throw new Error("Yandex properties not found");
+            const synonymsResponses: any[] = [];
+
+            for (const word of words) {
+                if (!process.env.YANDEX_API || !process.env.YANDEX_KEY) {
+                    throw new Error("Yandex properties not found");
+                }
+
+                const url =
+                    process.env.YANDEX_API +
+                    "?" +
+                    new URLSearchParams({
+                        key: process.env.YANDEX_KEY,
+                        lang: "en-en",
+                        text: word,
+                    }).toString();
+
+                const data = await callFetch({
+                    method: "GET",
+                    url: url,
+                    contentType: "application/json",
+                });
+
+                const jsonData: any = JSON.parse(data);
+
+                if (Array.isArray(jsonData.def)) {
+                    synonymsResponses.push(getSynonyms(jsonData.def));
+                }
             }
 
-            /**
-             * Example Call:
-             * https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=dict.1.1.20170610T055246Z.0f11bdc42e7b693a.eefbde961e10106a4efa7d852287caa49ecc68cf&lang=en-en&text=time
-             */
-            const data = await callFetch({
-                method: "GET",
-                url: process.env.YANDEX_API,
-                contentType: "application/json",
-            });
-
-            console.log(data.status);
-
-            return data;
+            return synonymsResponses;
         } catch (err: any) {
             console.log(
                 `Error in findSynonyms helper: ${err.message}`.trim() + "\n"

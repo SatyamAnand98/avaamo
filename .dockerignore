@@ -2,3 +2,7 @@ node_modules
 package-lock.json
 .env
 uploads
+eng.traineddata
+AWS_S3/
+build
+pushDocker.sh
