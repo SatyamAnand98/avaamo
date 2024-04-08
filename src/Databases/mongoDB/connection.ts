@@ -2,6 +2,9 @@ import mongoose, { Connection, Mongoose } from "mongoose";
 import { IDB_Connection } from "../abstract/connection.abstract";
 import { createDBModels } from "./models";
 
+/**
+ * Represents a database connection.
+ */
 export class DatabaseConnection implements IDB_Connection {
     private static instance: DatabaseConnection;
     private mongooseInstance: Mongoose = mongoose;
@@ -11,6 +14,10 @@ export class DatabaseConnection implements IDB_Connection {
 
     private constructor() {}
 
+    /**
+     * Returns the singleton instance of DatabaseConnection.
+     * @returns The singleton instance of DatabaseConnection.
+     */
     public static getInstance(): DatabaseConnection {
         if (!DatabaseConnection.instance) {
             DatabaseConnection.instance = new DatabaseConnection();
@@ -18,30 +25,51 @@ export class DatabaseConnection implements IDB_Connection {
         return DatabaseConnection.instance;
     }
 
+    /**
+     * Connects to the database.
+     * @returns A promise that resolves when the connection is established.
+     */
     public async connect(): Promise<void> {
         if (!this.connection) {
             await this.initConnection();
         }
     }
 
+    /**
+     * Closes the database connection.
+     * @returns A promise that resolves when the connection is closed.
+     */
     public async closeConnection(): Promise<void> {
         if (this.databaseConn) {
             await this.databaseConn.close();
         }
     }
 
+    /**
+     * Drops the current database.
+     * @returns A promise that resolves when the database is dropped.
+     */
     public async dropDatabase(): Promise<void> {
         if (this.connection) {
             await this.connection.dropDatabase();
         }
     }
 
+    /**
+     * Removes a model from the database connection.
+     * @param modelName - The name of the model to remove.
+     * @returns A promise that resolves when the model is removed.
+     */
     public async removeModel(modelName: string): Promise<void> {
         if (this.connection && this.connection.models[modelName]) {
             this.connection.deleteModel(modelName);
         }
     }
 
+    /**
+     * creates a connection to the database and stores it in `db.connection`.
+     * @returns void
+     */
     private async initConnection(): Promise<void> {
         const DB_URL: string =
             process.env.ENVIRONMENT === "LOCAL"
@@ -95,6 +123,10 @@ export class DatabaseConnection implements IDB_Connection {
         });
     }
 
+    /**
+     * Returns the models associated with the database connection.
+     * @returns The models associated with the database connection.
+     */
     public getModels(): { [key: string]: any } {
         return this.models;
     }

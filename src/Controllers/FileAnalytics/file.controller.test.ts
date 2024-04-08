@@ -1,3 +1,10 @@
+/**
+ * @file FILEPATH: /Users/satyamanand/Downloads/Data/Satyam/Interview_Prep/FileSense/src/Controllers/FileAnalytics/file.controller.test.ts
+ * @description This file contains the unit tests for the FileController class.
+ * It tests the functionality of the uniqueWords, maskWords, and wordSynonyms methods.
+ * The tests ensure that the methods handle requests and responses correctly,
+ * and return the expected status codes and data.
+ */
 import { Request, Response } from "express";
 import database from "../../Databases/mongoDB/connection";
 import { uniqueWordsExpects } from "../../stores/tests/uniqueWords";
@@ -11,6 +18,10 @@ describe("FileController", () => {
     let consoleErrorSpy: jest.SpyInstance;
     let originalConsoleError: any;
 
+    /**
+     * Executes once before all test cases in the describe block.
+     * It initializes the FileActivityController and establishes a connection to the database.
+     */
     beforeAll(async () => {
         console.log(".... Starting Connection ....");
         fileController = new FileActivityController();
@@ -18,6 +29,11 @@ describe("FileController", () => {
         console.log(".... Connection Established ....");
     });
 
+    /**
+     * Executes before each test case in the describe block.
+     * It resets the console.error and console.log functions,
+     * and sets up a spy on console.error to prevent error logs from interfering with the test results.
+     */
     beforeEach(() => {
         console.error = jest.fn();
         console.log = jest.fn();
@@ -32,11 +48,19 @@ describe("FileController", () => {
             });
     });
 
+    /**
+     * Executes after each test case in the describe block.
+     * It restores the original console.error function and clears the consoleErrorSpy.
+     */
     afterEach(() => {
         consoleErrorSpy.mockRestore();
         console.error = originalConsoleError;
     });
 
+    /**
+     * Executes after all test cases in the describe block.
+     * It closes the connection to the database and clears all mocks.
+     */
     afterAll(async () => {
         try {
             console.log(".... Closing Connection ....");
@@ -82,6 +106,9 @@ describe("FileController", () => {
         test("should mask files and return 200 status: ", async () => {
             const req: Request = maskWordsExpects[0]
                 .input as unknown as Request;
+            /**
+             * Represents the response object used in the file controller test.
+             */
             const res: Response = {
                 status: jest.fn().mockReturnThis(),
                 send: jest.fn(),
@@ -95,6 +122,9 @@ describe("FileController", () => {
         test("should mask text and send the url of stored file: ", async () => {
             const req: Request = maskWordsExpects[0]
                 .input as unknown as Request;
+            /**
+             * Represents the response object used in the file.controller.test module.
+             */
             const res: Response = {
                 status: jest.fn().mockReturnThis(),
                 send: jest.fn(),
