@@ -148,11 +148,9 @@ class FileActivityService extends HelperAbstract {
 
                 if (Array.isArray(jsonData.def)) {
                     synonymsResponses.push({
-                        [file.originalname]: {
-                            word,
-                            wordCount: wordCount(fileText[0].text, word),
-                            synonyms: getSynonyms(jsonData.def),
-                        },
+                        word,
+                        wordCount: wordCount(fileText[0].text, word),
+                        synonyms: getSynonyms(jsonData.def),
                     });
                 }
             }
