@@ -2,6 +2,9 @@ import express from "express";
 import fileActivityController from "../Controllers/FileAnalytics/file.controller";
 import multer from "multer";
 
+/**
+ * Router for handling file activity routes.
+ */
 const fileActivityRoutes = express.Router();
 
 const upload = multer(); // add `{ dest: "uploads/" }` to store the files

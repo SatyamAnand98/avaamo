@@ -27,7 +27,7 @@ class ReadFiles {
                                 file.buffer,
                                 function (error, text) {
                                     if (error) {
-                                        console.log(
+                                        console.error(
                                             "Error in reading file: ",
                                             error
                                         );
@@ -48,7 +48,7 @@ class ReadFiles {
             );
             return texts;
         } catch (err: any) {
-            console.log(
+            console.error(
                 `Error in reading text from all files: ${err}`.trim() + "\n"
             );
             throw err;

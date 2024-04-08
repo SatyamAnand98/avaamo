@@ -37,7 +37,7 @@ async function callFetch({
         const data = await response.text();
         return data;
     } catch (error: any) {
-        console.log("API request using fetch failed: ", error.message.trim());
+        console.error("API request using fetch failed: ", error.message.trim());
         throw error;
     }
 }

@@ -4,7 +4,7 @@ import { EPurpose } from "../../../stores/enums/purpose.enum";
 /**
  * Define the interface for the UploadedFile document
  */
-interface UploadedFileDocument {
+interface IUploadedFileDocument {
     fileName: string;
     originalName: string;
     encoding: string;
@@ -20,7 +20,7 @@ interface UploadedFileDocument {
 /**
  * Represents the schema for a file in the MongoDB database.
  */
-const uploadedFileSchema = new Schema<UploadedFileDocument>(
+const uploadedFileSchema = new Schema<IUploadedFileDocument>(
     {
         fileName: { type: String, required: true, index: true },
         originalName: { type: String, required: true },
@@ -42,12 +42,4 @@ const uploadedFileSchema = new Schema<UploadedFileDocument>(
     }
 );
 
-/**
- * Define the model for the UploadedFile collection
- */
-const UploadedFileModel = model<UploadedFileDocument>(
-    "UploadedFile",
-    uploadedFileSchema
-);
-
-export { UploadedFileModel, UploadedFileDocument, uploadedFileSchema };
+export { IUploadedFileDocument, uploadedFileSchema };

@@ -4,7 +4,7 @@
   "description": "Smart File Analysis and Masking",
   "main": "src/server.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npx jest --detectOpenHandles file.controller.test.ts && exit 1",
     "dev": "ts-node-dev --respawn --pretty --transpile-only src/server.ts",
     "build": "rm -rf ./build/ && tsc -p tsconfig.json && cp -r ./src/stores/htmls ./build/stores/htmls",
     "start": "node build/server.js"
@@ -33,10 +33,14 @@
     "@types/dotenv": "^8.2.0",
     "@types/ejs": "^3.1.5",
     "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.12",
     "@types/jquery": "^3.5.29",
+    "@types/mocha": "^10.0.6",
     "@types/multer": "^1.4.11",
     "@types/nodemailer": "^6.4.14",
+    "jest": "^29.7.0",
     "multer": "^1.4.5-lts.1",
+    "ts-jest": "^29.1.2",
     "ts-node-dev": "^2.0.0"
   }
 }

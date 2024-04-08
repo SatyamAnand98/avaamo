@@ -6,20 +6,28 @@ import {
     uniqueWordSchemaValidator,
     wordSchemaValidator,
 } from "../validators/files.validator";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 /**
  * Controller class for handling file activities.
  */
-class FileActivityController extends ControllerAbstract {
+export class FileActivityController extends ControllerAbstract {
+    /**
+     * Represents a FileController.
+     * @constructor
+     */
     constructor() {
         super();
     }
 
     /**
-     * Handles the uniqueWords functionality.
+     * Retrieves the unique words from the uploaded files and send an email on the given email.
      *
-     * @param req - The request object.
-     * @param res - The response object.
+     * @param req - The Express request object.
+     * @param res - The Express response object.
+     * @returns A Promise that resolves to void.
      */
     async uniqueWords(req: Request, res: Response): Promise<void> {
         try {
@@ -44,7 +52,7 @@ class FileActivityController extends ControllerAbstract {
                 E_HTTP_STATUS_CODE.CREATED
             );
         } catch (err: any) {
-            console.log(
+            console.error(
                 `Error in file upload controller: ${err}`.trim() + "\n"
             );
             super._errorHandler(res, err);
@@ -52,10 +60,11 @@ class FileActivityController extends ControllerAbstract {
     }
 
     /**
-     * Handles the findSynonyms functionality.
+     * Finds synonyms for the given words in the provided file.
      *
-     * @param req - The request object.
-     * @param res - The response object.
+     * @param req - The Express request object.
+     * @param res - The Express response object.
+     * @returns A Promise that resolves to void.
      */
     async findSynonyms(req: Request, res: Response): Promise<void> {
         try {
@@ -89,10 +98,10 @@ class FileActivityController extends ControllerAbstract {
     }
 
     /**
-     * Handles the word masking functionality.
+     * Handles the word masking operation.
      *
-     * @param req - The request object.
-     * @param res - The response object.
+     * @param req - The Express request object.
+     * @param res - The Express response object.
      */
     async wordMasking(req: Request, res: Response) {
         try {

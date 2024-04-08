@@ -1,15 +1,15 @@
+import ejs from "ejs";
 import fs from "fs";
 import path from "path";
-import ReadFiles from "../logics/readTextFromFile";
+import { callFetch } from "../../APIs";
+import database from "../../Databases/mongoDB/connection";
 import { HelperAbstract } from "../../stores/abstracts/helper.abstracts";
-import { UploadedFileModel } from "../../Databases/mongoDB/models/uploadedFile.model";
-import { sendEmail } from "../logics/sendEmail";
-import ejs from "ejs";
-import { saveBufferToS3 } from "../logics/saveBufferToFile";
-import { callAxios, callFetch } from "../../APIs";
-import { getSynonyms } from "../logics/getPrepositions";
-import { wordCount } from "../logics/word.count";
 import { EPurpose } from "../../stores/enums/purpose.enum";
+import { getSynonyms } from "../logics/getPrepositions";
+import ReadFiles from "../logics/readTextFromFile";
+import { saveBufferToS3 } from "../logics/saveBufferToFile";
+import { sendEmail } from "../logics/sendEmail";
+import { wordCount } from "../logics/word.count";
 
 const successHtmlPath = path.resolve(__dirname, "../../stores/htmls");
 const successHtml = fs.readFileSync(
@@ -35,9 +35,10 @@ class FileActivityService extends HelperAbstract {
     ): Promise<any> {
         try {
             const textInFiles = await ReadFiles.readTextFromAll(files);
+            const uploadModel = database.getModels().uploadedFileModel;
 
             const uploadFiles = files.map((file) => {
-                return new UploadedFileModel({
+                return new uploadModel({
                     fileName:
                         file.originalname.split(".")[0] +
                         "-" +
@@ -54,8 +55,9 @@ class FileActivityService extends HelperAbstract {
                 });
             });
 
-            UploadedFileModel.insertMany(uploadFiles)
-                .then((result) => {
+            uploadModel
+                .insertMany(uploadFiles)
+                .then((result: any) => {
                     const htmlData = ejs.render(successHtml, {
                         textInFiles,
                     });
@@ -68,12 +70,13 @@ class FileActivityService extends HelperAbstract {
                     });
                 })
                 .catch((err: any) => {
-                    console.log(
+                    console.error(
                         `Error in file upload .catch block: ${err.message}`.trim() +
                             "\n"
                     );
                     const htmlData = ejs.render(failedHtml, {
-                        errorMessage: err.message,
+                        error: err,
+                        maxFileSize: null,
                     });
                     sendEmail({
                         to: email,
@@ -85,7 +88,7 @@ class FileActivityService extends HelperAbstract {
 
             return textInFiles;
         } catch (err: any) {
-            console.log(
+            console.error(
                 `Error in file upload helper: ${err.message}`.trim() + "\n"
             );
             throw err;
@@ -101,9 +104,10 @@ class FileActivityService extends HelperAbstract {
     ): Promise<any> {
         try {
             const synonymsResponses: any[] = [];
+            const uploadModel = database.getModels().uploadedFileModel;
             const fileText = await ReadFiles.readTextFromAll([file]);
 
-            new UploadedFileModel({
+            new uploadModel({
                 fileName:
                     file.originalname.split(".")[0] +
                     "-" +
@@ -155,7 +159,7 @@ class FileActivityService extends HelperAbstract {
 
             return synonymsResponses;
         } catch (err: any) {
-            console.log(
+            console.error(
                 `Error in findSynonyms helper: ${err.message}`.trim() + "\n"
             );
             throw err;
@@ -170,6 +174,7 @@ class FileActivityService extends HelperAbstract {
         email: string
     ): Promise<any> {
         try {
+            const uploadModel = database.getModels().uploadedFileModel;
             let maskedContent = file.buffer.toString();
             words.forEach((word) => {
                 maskedContent = maskedContent.replace(
@@ -185,7 +190,7 @@ class FileActivityService extends HelperAbstract {
 
             const filesPath: string[] = saveBufferToS3([maskedFile]);
 
-            new UploadedFileModel({
+            new uploadModel({
                 fileName:
                     file.originalname.split(".")[0] +
                     "-" +
@@ -205,7 +210,7 @@ class FileActivityService extends HelperAbstract {
 
             return filesPath;
         } catch (err: any) {
-            console.log(
+            console.error(
                 `Error in wordMasking helper: ${err.message}`.trim() + "\n"
             );
             throw err;

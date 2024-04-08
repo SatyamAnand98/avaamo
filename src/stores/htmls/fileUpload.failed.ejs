@@ -19,23 +19,21 @@
                         <p>Please try again.</p>
 
                         <!-- Display any form errors here -->
-                        <c:if test="${!empty errors}">
+                        <% if (error) { %>
                             <div class="alert alert-danger">
                                 <ul>
-                                    <c:forEach items="${errors}" var="error">
-                                        <li>${error}</li>
-                                    </c:forEach>
+                                    <li>
+                                        <%= error %>
+                                    </li>
                                 </ul>
                             </div>
-                        </c:if>
+                            <% } %>
 
-                        <!-- Display a message if the file is too large -->
-                        <c:if test="${not empty maxFileSize}">
-                            <p>Maximum file size: ${maxFileSize}</p>
-                        </c:if>
-
-                        <!-- Display a link to try again -->
-                        <a href="/upload_form">Try Again</a>
+                                <!-- Display a message if the file is too large -->
+                                <% if (maxFileSize) { %>
+                                    <p>Maximum file size: <%= maxFileSize %>
+                                    </p>
+                                    <% } %>
                     </div>
                 </div>
             </div>

@@ -23,7 +23,7 @@ function countWordFrequency(str: string): { [key: string]: number } {
 
         return sortedFrequencyMap;
     } catch (err: any) {
-        console.log(`Error in counting word frequency: ${err}`.trim() + "\n");
+        console.error(`Error in counting word frequency: ${err}`.trim() + "\n");
         throw err;
     }
 }
@@ -41,7 +41,7 @@ function wordCount(mainString: string, subString: string): number {
 
         return matches ? matches.length : 0;
     } catch (err: any) {
-        console.log(`Error in wordCount function: ${err.message}`);
+        console.error(`Error in wordCount function: ${err.message}`);
         throw err;
     }
 }

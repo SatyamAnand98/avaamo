@@ -10,7 +10,7 @@ dotenv.config();
 /**
  * Represents a server that handles incoming requests and manages a database connection.
  */
-class Server {
+export class Server {
     private app: express.Application; // Express application.
     private databaseInstance: DatabaseConnection | undefined; // Database connection instance.
 
@@ -37,8 +37,7 @@ class Server {
      * Connects to the database.
      */
     private connectDB() {
-        this.databaseInstance = database.getInstance();
-        this.databaseInstance.connect();
+        database.connect();
     }
 
     /**
@@ -59,7 +58,7 @@ class Server {
                 console.log(`🟢 Server is running on port ${process.env.PORT}`);
             });
         } catch (error: any) {
-            console.log("Error in start server: ", error.message);
+            console.error("Error in start server: ", error.message);
             this.handleUncaughtError();
         }
     }
