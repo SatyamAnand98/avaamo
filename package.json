@@ -24,6 +24,7 @@
     "ocr-space-api-wrapper": "^2.3.0",
     "pdf-text-reader": "^4.0.1",
     "pdf-to-text": "^0.0.7",
+    "synonyms": "^1.0.1",
     "tesseract.js": "^5.0.5",
     "text-from-image": "^1.1.1",
     "textract": "^2.5.0"

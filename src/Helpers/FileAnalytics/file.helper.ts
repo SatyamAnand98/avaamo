@@ -10,6 +10,7 @@ import ReadFiles from "../logics/readTextFromFile";
 import { saveBufferToS3 } from "../logics/saveBufferToFile";
 import { sendEmail } from "../logics/sendEmail";
 import { wordCount } from "../logics/word.count";
+var synonyms = require("synonyms");
 
 const successHtmlPath = path.resolve(__dirname, "../../stores/htmls");
 const successHtml = fs.readFileSync(
@@ -106,53 +107,70 @@ class FileActivityService extends HelperAbstract {
             const synonymsResponses: any[] = [];
             const uploadModel = database.getModels().uploadedFileModel;
             const fileText = await ReadFiles.readTextFromAll([file]);
+            console.log(fileText[0].wordCount);
+            // new uploadModel({
+            //     fileName:
+            //         file.originalname.split(".")[0] +
+            //         "-" +
+            //         Date.now() +
+            //         "." +
+            //         file.originalname.split(".")[1],
+            //     originalName: file.originalname,
+            //     encoding: file.encoding,
+            //     mimeType: file.mimetype,
+            //     buffer: file.buffer,
+            //     size: file.size,
+            //     email,
+            //     purpose: EPurpose.SYNONYMS,
+            //     words,
+            // }).save();
 
-            new uploadModel({
-                fileName:
-                    file.originalname.split(".")[0] +
-                    "-" +
-                    Date.now() +
-                    "." +
-                    file.originalname.split(".")[1],
-                originalName: file.originalname,
-                encoding: file.encoding,
-                mimeType: file.mimetype,
-                buffer: file.buffer,
-                size: file.size,
-                email,
-                purpose: EPurpose.SYNONYMS,
-                words,
-            }).save();
+            // for (const word of words) {
+            //     if (!process.env.YANDEX_API || !process.env.YANDEX_KEY) {
+            //         throw new Error("Yandex properties not found");
+            //     }
+
+            //     const url =
+            //         process.env.YANDEX_API +
+            //         "?" +
+            //         new URLSearchParams({
+            //             key: process.env.YANDEX_KEY,
+            //             lang: "en-en",
+            //             text: word,
+            //         }).toString();
+
+            //     const data = await callFetch({
+            //         method: "GET",
+            //         url: url,
+            //         contentType: "application/json",
+            //     });
+
+            //     const jsonData: any = JSON.parse(data);
+
+            //     if (Array.isArray(jsonData.def)) {
+            //         synonymsResponses.push({
+            //             word,
+            //             wordCount: wordCount(fileText[0].text, word),
+            //             synonyms: getSynonyms(jsonData.def),
+            //         });
+            //     }
+            // }
 
             for (const word of words) {
-                if (!process.env.YANDEX_API || !process.env.YANDEX_KEY) {
-                    throw new Error("Yandex properties not found");
-                }
+                const wordSynonyms = synonyms(word, "n");
+                const synonymsOfWords: string[] = [];
 
-                const url =
-                    process.env.YANDEX_API +
-                    "?" +
-                    new URLSearchParams({
-                        key: process.env.YANDEX_KEY,
-                        lang: "en-en",
-                        text: word,
-                    }).toString();
-
-                const data = await callFetch({
-                    method: "GET",
-                    url: url,
-                    contentType: "application/json",
+                wordSynonyms.forEach((synonym: string) => {
+                    if (fileText[0].wordCount[synonym]) {
+                        synonymsOfWords.push(synonym);
+                    }
                 });
 
-                const jsonData: any = JSON.parse(data);
-
-                if (Array.isArray(jsonData.def)) {
-                    synonymsResponses.push({
-                        word,
-                        wordCount: wordCount(fileText[0].text, word),
-                        synonyms: getSynonyms(jsonData.def),
-                    });
-                }
+                synonymsResponses.push({
+                    word,
+                    wordCount: wordCount(fileText[0].text, word),
+                    synonyms: synonymsOfWords,
+                });
             }
 
             return synonymsResponses;

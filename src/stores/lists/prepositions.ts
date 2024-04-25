@@ -1,4 +1,4 @@
-export const prepositionList = [
+export const ignoredPrepositionList = [
     "in",
     "on",
     "at",

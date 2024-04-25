@@ -1,11 +1,11 @@
-import { prepositionList } from "../../stores/lists/prepositions";
+import { ignoredPrepositionList } from "../../stores/lists/prepositions";
 
 function countWordFrequency(str: string): { [key: string]: number } {
     try {
         const words = str.toLowerCase().split(/\W+/);
         const frequencyMap: { [key: string]: number } = {};
 
-        const prepositions = new Set(prepositionList);
+        const prepositions = new Set(ignoredPrepositionList);
 
         for (const word of words) {
             if (word.length > 0 && !prepositions.has(word)) {

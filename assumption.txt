@@ -1,0 +1,16 @@
+Assumptions:
+1. The task ignores the count of words from the file that are prepositions listed in src/stores/lists/prepositions.ts.
+2. The task utilizes MongoDB as the database.
+3. In addition to the above, the task assumes that requests are sent to a queue and then processed in batches to avoid downtime.
+4. Monitoring it using Prometheus and Grafana or newrelic or Sentry.
+5. Tracing using Zipkin.
+
+
+
+
+Reason for choosing MongoDB:
+1. Flexible Schema: MongoDB's document-based data model allows for flexible schemas, making it easy to store unstructured or semi-structured data. This flexibility can be advantageous when dealing with various file formats and data types.
+2. Scalability: MongoDB is designed for horizontal scalability, allowing you to distribute data across multiple nodes easily. This scalability is beneficial when dealing with large volumes of files and concurrent user requests.
+3. High Performance: MongoDB's efficient indexing and query optimization mechanisms contribute to high performance, which is crucial for handling large files and providing real-time analytics.
+4. Document-oriented Queries: MongoDB's query language supports rich document-oriented queries, making it easier to perform complex analytics tasks on file data.
+
