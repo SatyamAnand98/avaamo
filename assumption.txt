@@ -4,6 +4,8 @@ Assumptions:
 3. In addition to the above, the task assumes that requests are sent to a queue and then processed in batches to avoid downtime.
 4. Monitoring it using Prometheus and Grafana or newrelic or Sentry.
 5. Tracing using Zipkin.
+6. Number of Files limited to 4 at max
+7. Each file having maximum of 5 mb
 
 
 
