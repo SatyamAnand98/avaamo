@@ -107,23 +107,23 @@ class FileActivityService extends HelperAbstract {
             const synonymsResponses: any[] = [];
             const uploadModel = database.getModels().uploadedFileModel;
             const fileText = await ReadFiles.readTextFromAll([file]);
-            console.log(fileText[0].wordCount);
-            // new uploadModel({
-            //     fileName:
-            //         file.originalname.split(".")[0] +
-            //         "-" +
-            //         Date.now() +
-            //         "." +
-            //         file.originalname.split(".")[1],
-            //     originalName: file.originalname,
-            //     encoding: file.encoding,
-            //     mimeType: file.mimetype,
-            //     buffer: file.buffer,
-            //     size: file.size,
-            //     email,
-            //     purpose: EPurpose.SYNONYMS,
-            //     words,
-            // }).save();
+
+            new uploadModel({
+                fileName:
+                    file.originalname.split(".")[0] +
+                    "-" +
+                    Date.now() +
+                    "." +
+                    file.originalname.split(".")[1],
+                originalName: file.originalname,
+                encoding: file.encoding,
+                mimeType: file.mimetype,
+                buffer: file.buffer,
+                size: file.size,
+                email,
+                purpose: EPurpose.SYNONYMS,
+                words,
+            }).save();
 
             // for (const word of words) {
             //     if (!process.env.YANDEX_API || !process.env.YANDEX_KEY) {
